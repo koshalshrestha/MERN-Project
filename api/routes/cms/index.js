@@ -4,7 +4,9 @@ const customersRoutes = require('./customers.routes.js');
 const brandsRoutes = require('./brands.routes.js')
 const categoriesRoutes = require('./categories.routes.js')
 const productsRoutes = require('./products.routes.js')
-const { adminOnly } = require('@/lib/index.js');
+const reviewsRoutes = require('./reviews.routes.js')
+const odersRoutes = require('./orders.routes.js')
+const { adminOnly } = require('@/lib');
 
 const router = Router()
 
@@ -17,5 +19,9 @@ router.use('/brands', brandsRoutes)
 router.use('/categories', categoriesRoutes)
 
 router.use('/products', productsRoutes)
+
+router.use('/reviews', reviewsRoutes)
+
+router.use('/orders', odersRoutes)
 
 module.exports =  router;

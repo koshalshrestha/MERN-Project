@@ -26,6 +26,9 @@ app.use(express.urlencoded())
 app.use(routes)
 
 app.use((error, req, res, next) => {
+    if('message' in error && typeof error.message == 'string' && error.message.startsWith('ENOENT')){
+        error.message = 'File not found'
+    }
     res.status(error.status || 400)
     res.send({
         message: error.message || 'An unknown error occurred',

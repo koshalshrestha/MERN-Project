@@ -112,4 +112,15 @@ const upload = () => multer({
     }
 })
 
-module.exports = { validationError, errorMsg, auth, cmsAccess, adminOnly, upload }
+const customerOnly = (req, res, next) => {
+    if(req.user.role == "customer"){
+        next()
+    }else{
+        next({
+            message: 'Access denied',
+            status: 403
+        })
+    }
+}
+
+module.exports = { validationError, errorMsg, auth, cmsAccess, adminOnly, upload, customerOnly} 

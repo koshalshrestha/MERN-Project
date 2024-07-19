@@ -8,7 +8,7 @@ const Review = model('Review', new Schema({
         min: 1,
         max: 5
     },
-    ProductId: {
+    productId: {
         ...foreignConfig,
         ref: 'Product'
     },

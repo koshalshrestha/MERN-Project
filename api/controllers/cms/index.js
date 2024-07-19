@@ -8,4 +8,9 @@ const CategoriesCtrl = require('./categories.controller.js')
 
 const ProductsCtrl = require('./products.controller.js')
 
-module.exports = { StaffsCtrl, CustomersCtrl, BrandsCtrl, CategoriesCtrl, ProductsCtrl }
+const ReviewsCtrl = require('./reviews.controller.js')
+
+const OrdersCtrl = require('./orders.controller.js')
+const Order = require('@/models/order.model.js')
+
+module.exports = { StaffsCtrl, CustomersCtrl, BrandsCtrl, CategoriesCtrl, ProductsCtrl, ReviewsCtrl, OrdersCtrl }

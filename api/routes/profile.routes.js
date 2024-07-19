@@ -1,5 +1,6 @@
 const { Router } = require('express')
 const { Auth } = require('../controllers')
+const { customerOnly } = require('@/lib')
 
 const router = Router()
 
@@ -12,5 +13,10 @@ router.route('/update')
 router.route('/password')
     .put(Auth.profileCtrl.password)
     .patch((Auth.profileCtrl.password))
+
+router.get('/reviews', customerOnly, Auth.profileCtrl.reviews)
+
+router.get('/orders', customerOnly, Auth.profileCtrl.orders)
+
     
 module.exports =  router;

@@ -11,7 +11,7 @@ const Detail = model('Detail', new Schema({
         ref: 'Order'
     },
     price: numberRequired,
-    quantity: numberRequired,
+    qty: numberRequired,
     total: numberRequired
     
 }, extraConfig))

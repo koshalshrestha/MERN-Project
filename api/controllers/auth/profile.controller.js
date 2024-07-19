@@ -1,5 +1,5 @@
 const { errorMsg, validationError } = require("@/lib")
-const { User } = require("@/models")
+const { User, Review, Order, Detail } = require("@/models")
 const bcrypt = require('bcryptjs')
 
 
@@ -48,6 +48,48 @@ class profileCtrl {
                 })
             }
         }catch(error){
+            errorMsg(next, error)
+        }
+    }
+
+    reviews = async(req, res, next) => {
+        try{
+            let reviews = await Review.aggregate()
+                .match({userId: req.user._id})
+                .lookup({from: 'products', localField: 'productId', foreignField: '_id', as: 'product'})
+
+            for(let i in reviews){
+                reviews[i].product = reviews[i].product[0]
+            }
+
+            res.send(reviews)
+        }
+        catch(error){  
+            errorMsg(next, error)
+         }
+    }
+
+    orders = async(req, res, next) => {
+        try{
+            let orders = await Order.find({userId: req.user._id})
+
+            for(let item in orders){
+                let details = await Detail.aggregate()
+                    .match({orderId: orders[item]._id})
+                    .lookup({from: 'products', localField: 'productId', foreignField: '_id', as: 'product'})
+
+                for( let i in details){
+                    details[i].product = details[i].product[0]
+                }
+
+                orders[item] = {
+                    ...orders[item].toJSON(),
+                    details
+                }
+            }
+            res.send(orders)
+        }
+        catch(error){
             errorMsg(next, error)
         }
     }
