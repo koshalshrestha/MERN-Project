@@ -16,6 +16,14 @@
 			"problemMatcher": [],
 			"label": "npm: prod - api",
 			"detail": "node ."
+		},
+		{
+			"type": "npm",
+			"script": "dev",
+			"path": "cms-ui",
+			"problemMatcher": [],
+			"label": "npm: dev - cms-ui",
+			"detail": "vite"
 		}
 	]
 }
