@@ -12,6 +12,6 @@ export const InputField = ({ formik, name, label, type = "text" }) => {
     {formik.touched[name] && formik.errors[name] && <Form.Control.Feedback type="invalid">
         {formik.errors[name]}
         </Form.Control.Feedback>}
-</div>
+    </div>
 
 }
