@@ -1,10 +1,18 @@
-import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap"
-import { useSelector } from "react-redux"
+import { removeStorage } from "@/lib"
+import { clearUser } from "@/store"
+import { Container, Nav, Navbar, NavDropdown, Button, Dropdown } from "react-bootstrap"
+import { useDispatch, useSelector } from "react-redux"
 import { Link, NavLink} from "react-router-dom"
 
 export const MenuBar = () => {
 
     const user = useSelector(state => state.user.value)
+    const dispatch = useDispatch()
+
+    const handleLogout = () => {
+        removeStorage('cms_token')
+        dispatch(clearUser())
+    }
 
 
     return user && <Navbar expand="lg" bg="dark" data-bs-theme="dark"  >
@@ -20,9 +28,19 @@ export const MenuBar = () => {
 
             <Nav className="mb-lg-0 mb-2" >
                 <Nav.Item>
-                    <NavDropdown title="Demo User" align="end" >
-                        <Link className="dropdown-item" to=""> Logout  </Link>
-                        <Link className="dropdown-item" to=""> Edit User  </Link>
+                    <NavDropdown title={<>
+                            <i className="fa-solid fa-user me-2"></i> {user.name}
+                        </>} align="end" >
+                        <Link className="dropdown-item" to="/profile/edit"> 
+                            <i className="fa-solid fa-user-edit"></i>  Edit Profile
+                        </Link>
+                        <Link className="dropdown-item" to="">
+                            <i className="fa-solid fa-key me-2"></i> Change Password 
+                        </Link>
+                        <Dropdown.Divider />
+                        <Button variant="Link" className="dropdown-item" onClick= {handleLogout} >
+                            <i className="fa-solid fa-right-from-bracket me-2" ></i> Logout
+                        </Button>
                     </NavDropdown>
                 </Nav.Item>
             </Nav>
