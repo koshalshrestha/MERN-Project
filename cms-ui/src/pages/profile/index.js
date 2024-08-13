@@ -1,3 +1,4 @@
 import {Edit} from "./Edit"
+import { Password } from "./Password"
 
-export {Edit}
+export {Edit, Password}

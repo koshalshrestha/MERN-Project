@@ -17,12 +17,13 @@ export const MenuBar = () => {
 
     return user && <Navbar expand="lg" bg="dark" data-bs-theme="dark"  >
     <Container>
-        <Link className="navbar-brand" >MERN Project</Link>
+        <Link className="navbar-brand" to='/' >MERN Project</Link>
         <Navbar.Toggle />
         <Navbar.Collapse>
             <Nav className="me-auto" >
                 <Nav.Item>
-                    <NavLink className="nav-link" to=" " >Link</NavLink>
+                    <NavLink className="nav-link" to="/staffs" >
+                        <i className="fa-solid fa-users me-2"></i> Staff</NavLink>
                 </Nav.Item>
             </Nav>
 
@@ -34,7 +35,7 @@ export const MenuBar = () => {
                         <Link className="dropdown-item" to="/profile/edit"> 
                             <i className="fa-solid fa-user-edit"></i>  Edit Profile
                         </Link>
-                        <Link className="dropdown-item" to="">
+                        <Link className="dropdown-item" to="/profile/password">
                             <i className="fa-solid fa-key me-2"></i> Change Password 
                         </Link>
                         <Dropdown.Divider />

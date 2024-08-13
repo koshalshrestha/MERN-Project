@@ -38,13 +38,13 @@ class profileCtrl {
                     })
                 }else{
                     validationError(next, {
-                        password: 'The password is not confirmed'
+                        newPassword: 'The password is not confirmed'
                     })
                 }
                 
             }else{
                 validationError(next, {
-                    email: "Incorrect old Password"
+                    oldPassword: "Incorrect old Password"
                 })
             }
         }catch(error){
