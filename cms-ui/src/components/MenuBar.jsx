@@ -21,10 +21,10 @@ export const MenuBar = () => {
         <Navbar.Toggle />
         <Navbar.Collapse>
             <Nav className="me-auto" >
-                <Nav.Item>
+                {user.role == 'admin' && <Nav.Item>
                     <NavLink className="nav-link" to="/staffs" >
                         <i className="fa-solid fa-users me-2"></i> Staff</NavLink>
-                </Nav.Item>
+                </Nav.Item>}
             </Nav>
 
             <Nav className="mb-lg-0 mb-2" >

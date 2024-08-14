@@ -4,6 +4,7 @@ import { dtFormat } from "@/lib"
 import { useEffect, useState } from "react"
 import { Container, Row, Col, Table, Button } from "react-bootstrap"
 import { Link } from "react-router-dom"
+import { confirmAlert } from "react-confirm-alert"
 
 export const List = () => {
 
@@ -17,6 +18,31 @@ export const List = () => {
             .catch(() => {})
             .finally(() => setLoading(false))
       }, [])
+
+    const handleDelete = (id) => {
+        confirmAlert({
+            title: 'Confirm',
+            message: 'Are you sure you want to delete this staff?',
+            buttons: [
+                {
+                    label: 'Yes',
+                    className: 'text-bg-danger ',
+                    onClick: () => {
+                        setLoading(true)
+                        http.delete(`/cms/staffs/${id}`)
+                            .then(() => http.get('/cms/staffs'))
+                            .then(({data}) => setStaffs(data))
+                            .catch(() => {})
+                            .finally(() => setLoading(false))
+                    }
+
+                },
+                {
+                    label: 'No',
+                }
+            ]
+        })
+    }
 
     return <Container className="bg-white my-2 py-3 rounded-3 shadow">
             {loading ? <Loading /> : <Row>
@@ -53,10 +79,10 @@ export const List = () => {
                                     <td>{dtFormat(staff.createdAt)}</td>
                                     <td>{dtFormat(staff.updatedAt)}</td>
                                     <td>
-                                        <Link to='' className="btn btn-sm btn-dark me-2" >
+                                        <Link to={`/staffs/${staff._id}`} className="btn btn-sm btn-dark me-2" >
                                             <i className="fa-solid fa-pen-to-square"></i> Edit
                                         </Link>
-                                        <Button size="sm" variant="danger" >
+                                        <Button size="sm" variant="danger" onClick={() => handleDelete(staff._id)} >
                                             <i className="fa-solid fa-trash-can me-1"></i>Delete
                                         </Button>
                                     </td>
