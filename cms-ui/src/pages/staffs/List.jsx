@@ -1,4 +1,4 @@
-import { Loading } from "@/components"
+import { DataTable, Loading } from "@/components"
 import http from "@/http"
 import { dtFormat } from "@/lib"
 import { useEffect, useState } from "react"
@@ -55,41 +55,25 @@ export const List = () => {
                     </Link>
                 </Col>
                 <Col xs="12">
-                    {staffs.length ? 
-                    <Table bordered hover striped size="sm" >
-                        <thead className="table-dark" >
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Address</th>
-                                <th>Status</th>
-                                <th>Created At</th>
-                                <th>Updated At</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {staffs.map((staff, i) => <tr key={i}>
-                                    <td>{staff.name}</td>
-                                    <td>{staff.email}</td>
-                                    <td>{staff.phone}</td>
-                                    <td>{staff.address}</td>
-                                    <td>{staff.status ? 'Active' : 'Inactive'}</td>
-                                    <td>{dtFormat(staff.createdAt)}</td>
-                                    <td>{dtFormat(staff.updatedAt)}</td>
-                                    <td>
-                                        <Link to={`/staffs/${staff._id}`} className="btn btn-sm btn-dark me-2" >
-                                            <i className="fa-solid fa-pen-to-square"></i> Edit
-                                        </Link>
-                                        <Button size="sm" variant="danger" onClick={() => handleDelete(staff._id)} >
-                                            <i className="fa-solid fa-trash-can me-1"></i>Delete
-                                        </Button>
-                                    </td>
-                                </tr>)}
-                        </tbody>
-                    </Table> : 
-                    <h5 className="text-muted" >No data found</h5>}
+                   <DataTable searchables={['Name', 'Email','Phone', 'Address']} data={staffs.map(staff => {
+                    return {
+                        'Name': staff.name,
+                        'Email': staff.email,
+                        'Phone': staff.phone,
+                        'Address': staff.address,
+                        'Status': staff.status ? 'Active' : 'Inactive',
+                        'Created At': dtFormat(staff.createdAt),
+                        'Updated At': dtFormat(staff.updatedAt),
+                        'Action': <>
+                            <Link to={`/staffs/${staff._id}`} className="btn btn-dark btn-sm me-2">
+                                <i className="fa-solid fa-pen-to-square me-2" ></i> Edit
+                            </Link>
+                            <Button variant="danger" size="sm" onClick={() => handleDelete(staff._id)}>
+                                <i className="fa-solid fa-trash-can me-2" ></i> Delete
+                            </Button>
+                        </>
+                    }
+                   })} />
                 </Col>
             </Row>}
         </Container>

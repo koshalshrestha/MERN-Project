@@ -8,7 +8,7 @@ export const AdminRoute = ({ element }) => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (user.role != 'admin') {
+        if (user?.role != 'admin') {
             navigate('/')
         }
     } , [user])
