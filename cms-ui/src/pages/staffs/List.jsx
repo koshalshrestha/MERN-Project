@@ -55,7 +55,7 @@ export const List = () => {
                     </Link>
                 </Col>
                 <Col xs="12">
-                   <DataTable searchables={['Name', 'Email','Phone', 'Address']} data={staffs.map(staff => {
+                   <DataTable searchables={['Name', 'Email','Phone', 'Address']} sortables={['Name', 'Email','Phone', 'Address']} data={staffs.map(staff => {
                     return {
                         'Name': staff.name,
                         'Email': staff.email,
