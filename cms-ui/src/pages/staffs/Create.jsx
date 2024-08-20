@@ -6,10 +6,15 @@ import { handleValidationError } from "@/lib"
 import http from "@/http"
 import * as Yup from "yup"
 import YupPassword from "yup-password"
+import { useNavigate } from "react-router-dom"
+import { useDispatch } from "react-redux"
 
 YupPassword(Yup)
 
 export const Create = () => {
+
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const formik = useFormik({
         initialValues: {
