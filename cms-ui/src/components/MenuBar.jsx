@@ -51,6 +51,13 @@ export const MenuBar = () => {
                 </Nav.Item>
             </Nav>
 
+            <Nav className="me-auto" >
+                <Nav.Item>
+                    <NavLink className="nav-link" to="/products" >
+                        <i className="fa-solid fa-gifts me-2"></i> Products</NavLink>
+                </Nav.Item>
+            </Nav>
+
             <Nav className="mb-lg-0 mb-2" >
                 <Nav.Item>
                     <NavDropdown title={<>

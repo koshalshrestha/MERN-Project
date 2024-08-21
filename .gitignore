@@ -24,4 +24,6 @@ dist-ssr
 *.sw?
 
 # ignore enviromental varibales 
-.env
+api/.env
+cms-ui/.env
+api/uploads
