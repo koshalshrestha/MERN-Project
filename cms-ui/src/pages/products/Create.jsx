@@ -44,11 +44,37 @@ export const Create = () => {
             brandId: Yup.string().required(),
             status: Yup.boolean().required(),
             featured: Yup.boolean().required(),
-
+            images: Yup.mixed()
+                .test('fileLength', 'Select at least one image', files => files.length > 0)
+                .test('fileType', 'Selectd file should be an image', files => {
+                    for(let image of files){
+                        if(!image.type.startsWith('image/')){
+                            return false
+                        }
+                    }
+                    return true
+                })
 
         }),
         onSubmit: (data, { setSubmitting}) => {
-            http.post('/cms/products', data)
+
+            let fd = new FormData()
+
+            for(let k in data){
+                if(k == 'images'){
+                    for(let image of data[k]) {
+                        fd.append(k, image)
+                    }
+                }else{
+                    fd.append(k, data[k])
+                }
+            }
+
+            http.post('/cms/products', fd, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
                 .then( () => navigate('/products'))
                 .then(({data}) => dispatch(setUser(data)))
                 .catch(({response }) => handleValidationError(formik, response.data))
@@ -99,6 +125,24 @@ export const Create = () => {
 
                         <SelectField formik={formik} name= "categoryId" label="Category" options={categories} />
                         <SelectField formik={formik} name= "brandId" label="Brand" options={brands} />
+
+                        <div className="mb-3">
+                            <Form.Label htmlFor="images" >Images</Form.Label>
+                            <Form.Control type="file" name="images" id="images" accept="image/*" 
+                            onChange={({target}) => formik.setFieldValue('images', target.files)}
+                            onBlur={formik.handleBlur}
+                            isInvalid={formik.touched.images && formik.errors.images}
+                            isValid={formik.values.images?.length && !formik.errors.images}
+                            multiple
+                            />
+                            { formik.touched.images && formik.errors.images && <Form.Control.Feedback type="invalid" >{formik.errors.images}</Form.Control.Feedback>}
+                        </div>
+
+                        {formik.values.images?.length > 0 && <Row >
+                                {Array.from(formik.values.images).map((image,i) => <Col lg="3" className="mb-3" key={i} >
+                                    <img className="img-fluid" src={URL.createObjectURL(image)} />
+                                </Col>)}
+                            </Row>}
 
                         <SelectField formik={formik} name= "status" label="Status" options={{'Active': true, 'Inactive': false}} 
                         onChange={({target}) => formik.setFieldValue('status', target.value == 'true')} />

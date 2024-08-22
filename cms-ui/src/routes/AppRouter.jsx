@@ -44,6 +44,10 @@ export const AppRouter = () => {
                     <Route path=":id" element={<Pages.Products.Edit />} />
                 </Route>
 
+                <Route path="reviews" element = {<PrivateRoute element={<Pages.Reviews.List />} /> } />
+
+                <Route path="orders" element = {<PrivateRoute element={<Pages.Orders.List />} /> } />
+
                 <Route path="login" element={<Pages.Auth.Login />} />
             </Route>
         </Routes>

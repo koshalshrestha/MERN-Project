@@ -1,82 +1,215 @@
-import { useNavigate, useParams } from "react-router-dom"
+import { Container, Row, Col, Form, Button } from "react-bootstrap"
+import { InputField, Loading, SelectField, SubmitBtn } from "@/components"
 import { useFormik } from "formik"
-import * as Yup from "yup"
+import { setUser } from "@/store"
+import { handleValidationError, imgUrl } from "@/lib"
 import http from "@/http"
-import { handleValidationError } from "@/lib"
-import { Container, Row, Col, Form } from "react-bootstrap"
-import { InputField, SubmitBtn, SelectField, Loading } from "@/components"
+import * as Yup from "yup"
+import YupPassword from "yup-password"
+import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
+import { confirmAlert } from "react-confirm-alert"
 
+YupPassword(Yup)
 
 export const Edit = () => {
-    const [staff, setStaff] = useState({})
+
+    const [categories, setCategories] = useState([{}])
+    const [brands, setBrands] = useState([{}])
+    const [product, setProduct] = useState({})
     const [loading, setLoading] = useState(false)
 
-    const params = useParams()
     const navigate = useNavigate()
+    const params = useParams()
 
     const formik = useFormik({
         initialValues: {
             name: '',
-            phone:'',
-            address: '',
-            status: true
+            summary: '',
+            description: '',
+            price: '',
+            discountedPrice: '0',
+            categoryId: '',
+            brandId: '',
+            status: true,
+            featured: false,
+            images: []
         },
         validationSchema: Yup.object({
             name: Yup.string().required(),
-            phone: Yup.string().required().max(30),
-            address: Yup.string().required(),
-            status: Yup.boolean().required()
+            summary: Yup.string().required(),
+            description: Yup.string().nullable(),
+            price: Yup.number().required(),
+            discountedPrice: Yup.number().required(),
+            categoryId: Yup.string().required(),
+            brandId: Yup.string().required(),
+            status: Yup.boolean().required(),
+            featured: Yup.boolean().required(),
+            images: Yup.mixed()
+                .test('fileType', 'Selectd file should be an image', files => {
+                    if(files){
+                        for(let image of files){
+                            if(!image.type.startsWith('image/')){
+                                return false
+                            }
+                        }
+                    }
+                    return true
+                })
+
         }),
         onSubmit: (data, { setSubmitting}) => {
-            http.put(`/cms/staffs/${params.id}`, data)
-                .then( () => navigate('/staffs'))
+
+            let fd = new FormData()
+
+            for(let k in data){
+                if(k == 'images'){
+                    for(let image of data[k]) {
+                        fd.append(k, image)
+                    }
+                }else{
+                    fd.append(k, data[k])
+                }
+            }
+
+            http.patch(`/cms/products/${params.id}`, fd, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then( () => navigate('/products'))
                 .catch(({response }) => handleValidationError(formik, response.data))
                 .finally(() => setSubmitting(false))
         }
 
     })
 
-    useEffect( () => {
+    useEffect(() => {
         setLoading(true)
-        http.get(`/cms/staffs/${params.id}`)
-            .then(({data}) => setStaff(data))
-            .catch(() => {})
-            .finally(() => setLoading(false))
+        Promise.all([
+            http.get('/cms/categories'),
+            http.get('/cms/brands'),
+            http.get(`/cms/products/${params.id}`)
+        ])
+        .then(([{data : catDtat},{data : brandData}, {data : productData}]) => {
+            let temp = {}
+
+            for(let category of catDtat){
+                temp[category.name] = category._id
+            }
+            setCategories(temp)
+
+            temp = {}
+            for(let brand of brandData){
+                temp[brand.name] = brand._id
+            }
+            setBrands(temp)
+
+            setProduct(productData)
+
+        })
+        .catch(() => {})
+        .finally(() => setLoading(false))
     }, [])
 
-    useEffect( () => {
-        formik.setValues({
-            name: staff?.name,
-            phone: staff?.phone,
-            address: staff?.address,
-            status: staff?.status
+    useEffect(()=> {
+        if(Object.keys(product).length > 0){
+            for(let k in formik.values) {
+                if(k != 'images'){
+                    formik.setFieldValue(k, product[k])
+                }
+            }
+        }
+    },[product])
+
+    const handleDelete = (filename) => {
+        confirmAlert({
+            title: 'Confirm',
+            message: 'Are you sure you want to delete this product?',
+            buttons: [
+                {
+                    label: 'Yes',
+                    className: 'text-bg-danger ',
+                    onClick: () => {
+                        setLoading(true)
+                        http.delete(`/cms/products/${params.id}/image/${filename}`)
+                            .then(() => http.get(`/cms/products/${params.id}`))
+                            .then(({data}) => setProduct(data))
+                            .catch(() => {})
+                            .finally(() => setLoading(false))
+                    }
+
+                },
+                {
+                    label: 'No',
+                }
+            ]
         })
-    }, [staff])
+    }
 
     return <Container className="bg-white my-2 py-3 rounded-3 shadow">
             {loading ? <Loading /> : <>
-                <Row>
+            <Row>
                 <Col>
-                    <h1>Edit Staff</h1>
+                    <h1>Edit Product</h1>
                 </Col>
             </Row>
             <Row>
                 <Col>
                     <Form onSubmit={formik.handleSubmit}>
-                        <InputField formik={formik} name="name" label="Name"/>
-                        <InputField formik={formik} name="phone" label="Phone"/>
-                        <InputField formik={formik} name="address" as="textarea" label="Address"/>
+                        <InputField formik={formik} name="name" label="Name" />
+                        <InputField formik={formik} name="summary" label="Summary" as="textarea" />
+                        <InputField formik={formik} name="description" label="Description" as="textarea" />
+                        <InputField formik={formik} name="price" label="Price" />
+                        <InputField formik={formik} name="discountedprice" label="Discounted Price"  />
+
+                        <SelectField formik={formik} name= "categoryId" label="Category" options={categories} />
+                        <SelectField formik={formik} name= "brandId" label="Brand" options={brands} />
+
+                        <div className="mb-3">
+                            <Form.Label htmlFor="images" >Images</Form.Label>
+                            <Form.Control type="file" name="images" id="images" accept="image/*" 
+                            onChange={({target}) => formik.setFieldValue('images', target.files)}
+                            onBlur={formik.handleBlur}
+                            isInvalid={formik.touched.images && formik.errors.images}
+                            isValid={formik.values.images?.length && !formik.errors.images}
+                            multiple
+                            />
+                            { formik.touched.images && formik.errors.images && <Form.Control.Feedback type="invalid" >{formik.errors.images}</Form.Control.Feedback>}
+                        </div>
+
+                        {formik.values.images?.length > 0 && <Row >
+                                {Array.from(formik.values.images).map((image,i) => <Col lg="3" className="mb-3" key={i} >
+                                    <img className="img-fluid" src={URL.createObjectURL(image)} />
+                                </Col>)}
+                            </Row>}
+
+                        {product.images?.length > 0 && <Row >
+                            {product.images.map((image,i) => <Col lg="3" className="mb-3" key={i} >
+                            <Row>
+                                <Col xs="12">
+                                <img className="img-fluid" src={imgUrl(image)} />
+                                </Col>
+                                <Col xs="12 mt-3 text-center" >
+                                    <Button variant="danger" size="sm" onClick={() => handleDelete(image)}>
+                                        <i className="fa-solid fa-trash-can"></i>Delete
+                                    </Button>
+                                </Col>
+                            </Row>
+                            </Col>)}
+                        </Row>}
 
                         <SelectField formik={formik} name= "status" label="Status" options={{'Active': true, 'Inactive': false}} 
                         onChange={({target}) => formik.setFieldValue('status', target.value == 'true')} />
+                        <SelectField formik={formik} name= "featured" label="Featured" options={{'Yes': true, 'No': false}} 
+                        onChange={({target}) => formik.setFieldValue('featured', target.value == 'true')} />
 
                         <div className="mt-3">
                             <SubmitBtn loading={formik.isSubmitting}  />
                         </div>
                     </Form>
                 </Col>
-            </Row>
-            </>}
+            </Row></>}
         </Container>
+
 }

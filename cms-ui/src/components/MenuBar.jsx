@@ -28,33 +28,35 @@ export const MenuBar = () => {
                     <NavLink className="nav-link" to="/staffs" >
                         <i className="fa-solid fa-users me-2"></i> Staff</NavLink>
                 </Nav.Item>}
-            </Nav>
 
-            <Nav className="me-auto" >
                 <Nav.Item>
                     <NavLink className="nav-link" to="/customers" >
                         <i className="fa-solid fa-user-group me-2"></i> Customers</NavLink>
                 </Nav.Item>
-            </Nav>
 
-            <Nav className="me-auto" >
                 <Nav.Item>
-                    <NavLink className="nav-link" to="/categories" >
+                <NavLink className="nav-link" to="/categories" >
                         <i className="fa-solid fa-list me-2"></i> Categories</NavLink>
                 </Nav.Item>
-            </Nav>
 
-            <Nav className="me-auto" >
                 <Nav.Item>
                     <NavLink className="nav-link" to="/brands" >
                         <i className="fa-solid fa-tags me-2"></i> Brands</NavLink>
                 </Nav.Item>
-            </Nav>
 
-            <Nav className="me-auto" >
                 <Nav.Item>
                     <NavLink className="nav-link" to="/products" >
                         <i className="fa-solid fa-gifts me-2"></i> Products</NavLink>
+                </Nav.Item>
+
+                <Nav.Item>
+                    <NavLink className="nav-link" to="/reviews" >
+                        <i className="fa-solid fa-comments me-2"></i> Reviews</NavLink>
+                </Nav.Item>
+
+                <Nav.Item>
+                    <NavLink className="nav-link" to="/orders" >
+                        <i className="fa-solid fa-basket-shopping me-2"></i> Orders</NavLink>
                 </Nav.Item>
             </Nav>
 
