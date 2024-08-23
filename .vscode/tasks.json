@@ -24,6 +24,14 @@
 			"problemMatcher": [],
 			"label": "npm: dev - cms-ui",
 			"detail": "vite"
+		},
+		{
+			"type": "npm",
+			"script": "dev",
+			"path": "front-ui",
+			"problemMatcher": [],
+			"label": "npm: dev - front-ui",
+			"detail": "vite"
 		}
 	]
 }

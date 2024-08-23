@@ -68,7 +68,7 @@ export const List = () => {
                                 @ Rs {detail.price} = Rs. {detail.total}
                             </li>)}
                         </ul>,
-                        //'User': order.user.name,
+                        'User': order.user?.name,
                         'Status': <Form.Select value={order.status} onChange={({target}) => handleUpdate(order._id, target.value)} >
                             <option value="Pending">Pending</option>
                             <option value="Confirmed">Confirmed</option>

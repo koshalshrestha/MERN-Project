@@ -53,8 +53,8 @@ export const List = () => {
                 <Col xs="12">
                    <DataTable searchables={['Product', 'User', 'Comment', 'Rating']} sortables={['Product', 'User', 'Comment', 'Rating']} data={reviews.map(review => {
                     return {
-                        // 'Product': review.product.name,
-                        // 'User': review.user.name,
+                        'Product': review.product?.name,
+                        'User': review.user?.name,
                         'Comment': review.comment,
                         'Rating': review.rating,
                         'Created At': dtFormat(review.createdAt),
