@@ -1,5 +1,6 @@
 const {errorMsg} = require('@/lib')
 const {Product, Review} = require('@/models')
+const mongoose = require('mongoose');
 const {Types} = require('mongoose')
 
 class ProductsCtrl {
@@ -95,11 +96,12 @@ class ProductsCtrl {
 
     show = async (req, res, next) => {
         try{
-            const id  = req.params
+            const {id}  = req.params
 
             let  product = await Product.aggregate()
-                .match({'_id': new Types.ObjectId(id)} )
-                .lookup({from: 'brands', localField: 'brandId', foreignField: '_id', as: 'brand'})
+            //.match({'_id': new Types.ObjectId(id)} )
+            .match({ '_id': new mongoose.Types.ObjectId(id) })
+            .lookup({from: 'brands', localField: 'brandId', foreignField: '_id', as: 'brand'})
 
             
                 

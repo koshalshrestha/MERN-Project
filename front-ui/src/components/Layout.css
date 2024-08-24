@@ -11,6 +11,14 @@
     height: 50px;
 }
 
+.img-large {
+    height: 400px;
+}
+
+.img-small {
+    height: 50px;
+}
+
 body {
     background-color: #eaeaea;
     font-family: 'Open Sans Condensed', sans-serif;
