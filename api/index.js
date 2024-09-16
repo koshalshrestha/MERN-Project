@@ -3,10 +3,6 @@ require('module-alias/register')
 const express = require('express')
 const {config} = require('dotenv')
 const mongoose = require('mongoose')
-const {User, Brand, Category} = require('./models')
-// const User = require('./models/user.model.js')
-// const Brand = require('./models/brand.model.js')
-// const Category = require('./models/category.model.js')
 const routes = require('./routes')
 const cors = require('cors')
 
@@ -42,13 +38,4 @@ app.listen(port, async () => {
 
     await mongoose.connect(mongo)
     console.log('MongoDB connected')
-
-//     const users = await User.find()
-//     console.log(users)
-
-//     const brands = await Brand.find()
-//     console.log(brands)
-
-//     const category = await Category.find()
-//     console.log(category)
 })
